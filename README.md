@@ -4,15 +4,20 @@
 
 **added `onType` linting (0.5)**
 
-vscode currently already has flake8 integration HOWEVER it doesn't play nicely with
-flake8 plugins in that the regex can't parse the output correctly. This means that the
+VSCode already has flake8 integration HOWEVER it doesn't play nicely with
+flake8 plugins &mdash; the regex doesn't parse the output correctly. This means that the
 errors/warnings/information do not show up in the problems tab. This extension rectifies
 that.
 
 ## Quick Start
 
-1. Make sure you have installed flake8 somewhere..
-2. Set the path to the flake8 in `Settings.json` (or search in the vscode settings tab).
+1. Make sure you have installed flake8
+
+```bash
+ pip install flake8
+```
+
+2. Set the path to the flake8 in `settings.json` (or search in the vscode settings tab).
 
 ```json
 {
@@ -20,7 +25,7 @@ that.
 }
 ```
 
-3. Open a `.py` file and then save it and the extension will run showing all of the lint issues in the problems tab.
+3. Open a `.py` file and then save it and the extension will run showing all of the lint issues (inline and in the problems tab).
 
 ## Configuration
 
@@ -28,13 +33,19 @@ that.
 
 You need to include the full path to the flake8 executable that you wish to use.
 
-To find the path to the appropriate flake8 you can _(on *nix)_ do. I'm sure you can do something similar on Windows too.
+To find the path to the appropriate flake8, you can _(on *nix)_ use `which` as follows.
 
 ```bash
 which flake8
 ```
 
-The set it in `Settings.json`
+In Windows, try using `where.exe`
+
+```cmd
+where.exe flake8
+```
+
+Then copy that path to `settings.json`
 
 ```json
 {
@@ -44,9 +55,7 @@ The set it in `Settings.json`
 
 #### Change when the linter is run
 
-There are a couple of options here so that you can decide when to re-lint the
-current file. You can choose either on save or on type! Again all settings are
-available through the settings page, or the json.
+You have options to decide when to re-lint the current file &mdash; *on save* or *on type*. All settings are available through the settings page, or the json.
 
 ```json
 {
@@ -60,7 +69,7 @@ The way to configure flake8 extensions / settings / ignores and all other config
 for flake8 is by using the standard [flake8 configuration](https://flake8.pycqa.org/en/latest/user/configuration.html)
 rules. The extension will be run from the root directory of the workspace.
 
-Personally I like a `tox.ini` in the workspace root.
+Personally, I like a `tox.ini` in the workspace root.
 
 ```ini
 [flake8]
