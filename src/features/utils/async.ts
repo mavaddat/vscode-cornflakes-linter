@@ -102,14 +102,14 @@ export class Throttler<T> {
 export class Delayer<T> {
 
 	public defaultDelay: number;
-	private timeout: (number| NodeJS.Timeout);
+	private timeout: NodeJS.Timeout;
 	private completionPromise: Promise<T>;
 	private onResolve: (value: T | Thenable<T>) => void;
 	private task: ITask<T>;
 
 	constructor(defaultDelay: number) {
 		this.defaultDelay = defaultDelay;
-		this.timeout = 0;
+		this.timeout = setTimeout(()=>{},0);
 		this.completionPromise = new Promise<T>((resolve, reject) => {});
 		this.onResolve = (value: T | Thenable<T>) => {};
 		this.task = ()=>Object();
@@ -134,7 +134,7 @@ export class Delayer<T> {
 		}
 
 		this.timeout = setTimeout(() => {
-			this.timeout = 0;
+			this.timeout = setTimeout(()=>{},0);
 			this.onResolve(new Promise<T>((resolve, reject) => {}));
 		}, delay);
 
@@ -149,14 +149,14 @@ export class Delayer<T> {
 		this.cancelTimeout();
 
 		if (this.completionPromise) {
-			this.completionPromise = null;
+			this.completionPromise = new Promise<T>((resolve, reject) => {});
 		}
 	}
 
 	private cancelTimeout(): void {
 		if (this.timeout !== null) {
 			clearTimeout(this.timeout);
-			this.timeout = null;
+			this.timeout = setTimeout(()=>{},0);;
 		}
 	}
 }
