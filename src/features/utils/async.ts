@@ -1,7 +1,11 @@
-export interface ITask<T> {
-	(): T;
-}
+import { Task } from "vscode";
 
+export interface ITask<T> {
+	(): T; /** Generic function with no args returns data of type T as interface, e.g.,
+	let blah: ITask<number>=()=>17; 
+	console.log(blah()+1); //writes 18
+	**/
+}
 /**
  * A helper to prevent accumulation of sequential async tasks.
  *
@@ -29,9 +33,9 @@ export class Throttler<T> {
 	private queuedPromiseFactory: ITask<Promise<T>>;
 
 	constructor() {
-		this.activePromise = null;
-		this.queuedPromise = null;
-		this.queuedPromiseFactory = null;
+		this.activePromise =new Promise<T>((resolve, reject) => {}); 
+		this.queuedPromise = new Promise<T>((resolve, reject) => {});
+		this.queuedPromiseFactory = ()=>(new Promise<T>((resolve, reject) => {}));
 	}
 
 	public queue(promiseFactory: ITask<Promise<T>>): Promise<T> {
@@ -40,10 +44,10 @@ export class Throttler<T> {
 
 			if (!this.queuedPromise) {
 				var onComplete = () => {
-					this.queuedPromise = null;
+					this.queuedPromise = new Promise<T>((resolve, reject) => {});
 
 					var result = this.queue(this.queuedPromiseFactory);
-					this.queuedPromiseFactory = null;
+					this.queuedPromiseFactory = ()=>(new Promise<T>((resolve, reject) => {}));
 
 					return result;
 				};
@@ -62,10 +66,10 @@ export class Throttler<T> {
 
 		return new Promise<T>((resolve, reject) => {
 			this.activePromise.then((result: T) => {
-				this.activePromise = null;
+				this.activePromise = new Promise<T>((resolve, reject) => {});
 				resolve(result);
 			}, (err: any) => {
-				this.activePromise = null;
+				this.activePromise = new Promise<T>((resolve, reject) => {});
 				reject(err);
 			});
 		});
@@ -98,17 +102,17 @@ export class Throttler<T> {
 export class Delayer<T> {
 
 	public defaultDelay: number;
-	private timeout: number;
+	private timeout: (number| NodeJS.Timeout);
 	private completionPromise: Promise<T>;
 	private onResolve: (value: T | Thenable<T>) => void;
 	private task: ITask<T>;
 
 	constructor(defaultDelay: number) {
 		this.defaultDelay = defaultDelay;
-		this.timeout = null;
-		this.completionPromise = null;
-		this.onResolve = null;
-		this.task = null;
+		this.timeout = 0;
+		this.completionPromise = new Promise<T>((resolve, reject) => {});
+		this.onResolve = (value: T | Thenable<T>) => {};
+		this.task = ()=>Object();
 	}
 
 	public trigger(task: ITask<T>, delay: number = this.defaultDelay): Promise<T> {
@@ -119,19 +123,19 @@ export class Delayer<T> {
 			this.completionPromise = new Promise<T>((resolve, reject) => {
 				this.onResolve = resolve;
 			}).then(() => {
-				this.completionPromise = null;
-				this.onResolve = null;
+				this.completionPromise = new Promise<T>((resolve, reject) => {});
+				this.onResolve = (value: T | Thenable<T>) => {};
 
 				var result = this.task();
-				this.task = null;
+				this.task = ()=>Object();
 
 				return result;
 			});
 		}
 
 		this.timeout = setTimeout(() => {
-			this.timeout = null;
-			this.onResolve(null);
+			this.timeout = 0;
+			this.onResolve(new Promise<T>((resolve, reject) => {}));
 		}, delay);
 
 		return this.completionPromise;
