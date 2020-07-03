@@ -33,9 +33,10 @@ export class Throttler<T> {
 	private queuedPromiseFactory: ITask<Promise<T>>;
 
 	constructor() {
-		this.activePromise =new Promise<T>((resolve, reject) => {}); 
-		this.queuedPromise = new Promise<T>((resolve, reject) => {});
-		this.queuedPromiseFactory = ()=>(new Promise<T>((resolve, reject) => {}));
+		this.activePromise =new Promise<T>((resolve, reject) => {throw new Error("default value");
+		 }); 
+		this.queuedPromise = new Promise<T>((resolve, reject) => {throw new Error("default value");});
+		this.queuedPromiseFactory = ()=>(new Promise<T>((resolve, reject) => {throw new Error("default value");}));
 	}
 
 	public queue(promiseFactory: ITask<Promise<T>>): Promise<T> {

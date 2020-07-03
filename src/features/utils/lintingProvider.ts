@@ -56,8 +56,13 @@ export class LintingProvider {
 
 	private linter: Linter;
 	constructor(linter: Linter) {
+		this.linterConfiguration=Object.create(null);
+		this.executableNotFound=Object.create(null);;
+		this.documentListener= Object.create(null);
+		this.diagnosticCollection= Object.create(null);
+		this.delayers=Object.create(null);
 		this.linter = linter;
-		this.executableNotFound = false;
+		this.executableNotFound = Object.create(null);
 	}
 
 	public activate(subscriptions: vscode.Disposable[]) {
@@ -149,7 +154,7 @@ export class LintingProvider {
 					return;
 				}
 
-				let message: string = null;
+				let message: string = Object.create(null);
 				if ((<any>error).code === 'ENOENT') {
 					message = `Cannot lint ${filePath}. The executable was not found. Use the '${this.linter.settingsSection}.executablePath' setting to configure the location of the executable`;
 				} else {
@@ -161,7 +166,7 @@ export class LintingProvider {
 				resolve();
 			});
 
-			let onDataEvent = (data: Buffer) => { buffer += data.toString() };
+			let onDataEvent = (data: Buffer) => { buffer += data.toString(); };
 			let onEndEvent = () => {
 				// Split on line ending into an array.
 				let lines: string[] = buffer.split(/(\r?\n)/g);
@@ -175,14 +180,14 @@ export class LintingProvider {
 					diagnostics = this.linter.process(lines, filePath);
 
 					// Filter duplicates from the diagnostics array.
-					filteredDiagnostics = diagnostics.reduce((acc, current) => {
-						const x = acc.find(item => {
-							return (item.range.start.line === current.range.start.line) && (item.code === current.code)
+					filteredDiagnostics = diagnostics.reduce((acc, current, currentIndex, array) => {
+						const duplicate = array.find((item:vscode.Diagnostic,index:number,obj:vscode.Diagnostic[])=> {
+							return (item.range.start.line === current.range.start.line) && (item.code === current.code);
 						});
-						if (!x) {
-							return acc.concat([current]);
+						if (!duplicate) {
+							return acc.concat(acc[currentIndex]); //retain current item
 						} else {
-							return acc;
+							return acc; //allow current item to be expunged via reduce(..)
 						}
 					}, []);
 
