@@ -1,9 +1,9 @@
 {
-	"name": "cornflakes-linter",
-	"displayName": "cornflakes-linter",
-	"description": "Wrapper for Python flake8 linter and associated plugins. It rectifies current issues with displaying ALL flake8 problems in the problems tab.",
-	"version": "0.5.1",
-	"publisher": "kevinglasson",
+	"name": "eightflake-linter",
+	"displayName": "eightflake-linter",
+	"description": "Wrapper for Python flake8 linter and associated plugins. Allows complex quick fixes on flake8 style violations, which are listed in the `problems` tab.",
+	"version": "0.0.1",
+	"publisher": "mavaddat",
 	"icon": "images/cereals.png",
 	"categories": [
 		"Linters"
@@ -22,20 +22,24 @@
 		"url": "https://github.com/mavaddat/vscode-cornflakes-linter.git"
 	},
 	"engines": {
-		"vscode": "^1.0.0"
+		"vscode": "^1.22.0"
 	},
 	"activationEvents": [
 		"onLanguage:python"
 	],
 	"main": "./out/src/extension",
 	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-		"compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-		"postinstall": "node ./node_modules/vscode/bin/install"
+		"vscode:prepublish": "tslint {src,test}/**/*.ts && tsc -p ./",
+		"compile": "tslint {src,test}/**/*.ts && tsc -watch -p ./",
+		"pretest": "npm run vscode:prepublish",
+		"precommit": "npm run vscode:prepublish",
+		"prebublish": "npm run vscode:prepublish",
+		"build": ":"
 	},
 	"devDependencies": {
 		"typescript": "^1.8.10",
-		"vscode": "^0.11.12"
+		"@types/vscode": "^1.14.0",
+		"vscode-test": "^1.4.0"
 	},
 	"contributes": {
 		"configuration": {
@@ -59,6 +63,7 @@
 		}
 	},
 	"dependencies": {
-		"@types/node": "^14.0.14"
+		"@types/node": "^14.0.14",
+		"vscode-languageserver-types": "^3.15.1"
 	}
 }

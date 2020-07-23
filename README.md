@@ -39,13 +39,19 @@ To find the path to the appropriate flake8, you can _(on *nix)_ use `which` as f
 which flake8
 ```
 
-In Windows, try using `where.exe`
+In Windows, try using `where.exe` in cmd
 
 ```cmd
 where.exe flake8
 ```
 
-Then copy that path to `settings.json`
+or `Get-Command` in PowerShell
+
+```powershell
+Get-Command flake8
+```
+
+Then copy that path to `settings.json` at the endpoint below:
 
 ```json
 {
@@ -55,7 +61,7 @@ Then copy that path to `settings.json`
 
 #### Change when the linter is run
 
-You have options to decide when to re-lint the current file &mdash; *on save* or *on type*. All settings are available through the settings page, or the json.
+You can choose when to re-lint the current file &mdash; *on save* or *on type*. All settings are available through the settings page, or the json.
 
 ```json
 {

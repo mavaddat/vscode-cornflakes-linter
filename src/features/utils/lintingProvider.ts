@@ -17,7 +17,7 @@ namespace RunTrigger {
 		onSave: 'onSave',
 		onType: 'onType',
 		off: 'off'
-	}
+	};
 	export let from = function (value: string): RunTrigger {
 		if (value === 'onType') {
 			return RunTrigger.onType;
@@ -26,7 +26,7 @@ namespace RunTrigger {
 		} else {
 			return RunTrigger.off;
 		}
-	}
+	};
 }
 
 export interface LinterConfiguration {
@@ -142,11 +142,11 @@ export class LintingProvider {
 			args.push("-");
 
 			// Start flake8 and have it accept input form stdin.
-			let childProcess = cp.spawn(executable, args, options)
+			let childProcess = cp.spawn(executable, args, options);
 
 			// Now that flake8 has started write the document to stdin.
-			childProcess.stdin.write(textDocument.getText())
-			childProcess.stdin.end()
+			childProcess.stdin.write(textDocument.getText());
+			childProcess.stdin.end();
 
 			childProcess.on('error', (error: Error) => {
 				if (this.executableNotFound) {
@@ -171,10 +171,7 @@ export class LintingProvider {
 				// Split on line ending into an array.
 				let lines: string[] = buffer.split(/(\r?\n)/g);
 
-				lines = lines.filter((line) => (line !== "\n"));
-				lines = lines.filter((line) => (line !== ""));
-				lines = lines.filter((line) => (line !== "\r\n"));
-
+				lines = lines.filter((line) => !((line === "") || (line === "\n") || (line === "\r\n")));
 
 				if (lines && lines.length > 0) {
 					diagnostics = this.linter.process(lines, filePath);
@@ -198,7 +195,7 @@ export class LintingProvider {
 				}
 
 				resolve();
-			}
+			};
 
 			childProcess.stderr.on('data', onDataEvent);
 			childProcess.stderr.on('end', onEndEvent);

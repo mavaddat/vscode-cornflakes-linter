@@ -6,6 +6,7 @@
 	"search.exclude": {
 		"out": true // set this to false to include "out" folder in search results
 	},
+	"npm-intellisense.scanDevDependencies": true,
 	"typescript.tsdk": "./node_modules/typescript/lib",
 	"workbench.colorCustomizations": {
 		"activityBar.background": "#846a8e",
