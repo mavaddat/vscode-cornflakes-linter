@@ -37,8 +37,9 @@
 		"build": ":"
 	},
 	"devDependencies": {
-		"typescript": "^1.8.10",
 		"@types/vscode": "^1.14.0",
+		"@typescript-eslint/parser": "^3.7.0",
+		"typescript": "^3.9.7",
 		"vscode-test": "^1.4.0"
 	},
 	"contributes": {

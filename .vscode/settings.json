@@ -22,9 +22,7 @@
 		"statusBarItem.hoverBackground": "#846a8e",
 		"statusBar.foreground": "#e7e7e7",
 		"activityBar.activeBackground": "#846a8e",
-		"activityBar.activeBorder": "#c7a858",
-		"statusBar.border": "#695471",
-		"titleBar.border": "#695471"
+		"activityBar.activeBorder": "#c7a858"
 	},
 	"peacock.color": "#695471" // we want to use the TS server from our node_modules folder to control its version
 }
